@@ -1,0 +1,19 @@
+Security:
+  Keys:
+    zfspass: a123456
+Config:
+   aptmirror: http://nl.archive.ubuntu.com/ubuntu
+Services:
+  ssh:
+    name: ssh
+    state: enabled
+Users:
+  Bob: 
+    name: bob
+    password: password123
+  Sara:
+    name: sara
+    password: password456
+    ssh-private-keys:
+      - s1e
+      - dsd

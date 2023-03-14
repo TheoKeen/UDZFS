@@ -1,0 +1,15 @@
+---
+- name: Add users
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+   - ~/data.yml
+
+  tasks:
+
+   - name: Print the gateway for each host when defined
+     ansible.builtin.debug:
+      msg: "{{ Keys.zfspass }}"
+   - name: print Hostname
+     ansible.builtin.debug:
+      msg: "hostname is {{ hostname }}"
