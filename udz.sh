@@ -18,6 +18,33 @@
 #Location of optional vault password file on ubuntu live medium ~/.vault_pass.txt
 #The config file and vault password will be copied to the target system on /var/lib/udz/
 
+confirmflag=true
+print_usage() {
+  printf "Usage script:\n -d (Set Targetdisk for installation)\n -f (Force. Proceeds without confirmation. Must be used with -d)\n -h (Set hostname for target installation)\n -p (ANSIBLE-VAULT password)\n"
+}
+
+while getopts 'fd:h:p:v' flag; do
+  case "${flag}" in
+    d) TARGETDISK="${OPTARG}" ;;
+    f) confirmflag=false ;;
+    h) hostname="${OPTARG}" ;;
+    p) VAULTPASS="${OPTARG}" ;;
+    v) verbose=false ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+if ! ${confirmflag} && [  -z ${TARGETDISK} ]; then echo "Cowardly refusing to guess TARGETDISK without confirmation."; exit 1; fi
+#Get available DISKS 1) Get all real block devices. 2) Filter out the Disk with a partition mounted on /cdrom
+AVAILABLEDISKS=$(lsblk -I 8,259,252 -d -no NAME | grep --invert-match --file <(findmnt -D /cdrom -n -o SOURCE | xargs -r lsblk -no pkname | grep .  || echo "NULL") | awk '{print "/dev/"$1}' )
+if [ ! -z ${TARGETDISK} ]; then
+  if  [ -z $(echo "${AVAILABLEDISKS}" | grep ${TARGETDISK} ) ]; then
+    echo "Disk ${TARGETDISK} not found";echo "Please select one of the following disks:";echo "${AVAILABLEDISKS}"
+    exit 1
+  fi
+fi
+#Use specified targetdisk or first available DISK
+TARGETDISK=${TARGETDISK:=$(echo "${AVAILABLEDISKS}" |  head -n 1)}
 
 configfile=~/config.yml
 vaultpassfile=~/.vaultpass.txt
@@ -34,7 +61,7 @@ swappartno=2
 #Get DNS domain from resolver (Passed to resolver by dhcp option 15)
 DNSDOMAIN=${DNSDOMAIN:=$(resolvectl  | grep "DNS Domain" | cut -d ":" -f2 | xargs)}
 #Determine /  Guess what the target disk should be 1) Use TARGETDISK ENV VAR if set. 2) Get all real block devices. 3) Filter out the Disk with a partition mounted on /cdrom . 4) Pick the First one. 
-TARGETDISK=${TARGETDISK:=/dev/$(lsblk -I 8,259,252 -d -no NAME | grep --invert-match --file <(findmnt -D /cdrom -n -o SOURCE | xargs -r lsblk -no pkname | grep .  || echo "NULL") |  head -n 1)}
+#TARGETDISK=${TARGETDISK:=/dev/$(lsblk -I 8,259,252 -d -no NAME | grep --invert-match --file <(findmnt -D /cdrom -n -o SOURCE | xargs -r lsblk -no pkname | grep .  || echo "NULL") |  head -n 1)}
 #If using nvme the "p" needs to be inserted for the partition number to get the partition.
 PARTLABEL=$(if grep -iq nvme <<< "$TARGETDISK"; then echo "p"; fi)
 
@@ -56,6 +83,7 @@ codename="${VERSION_CODENAME}-desktop-zfs"
 scriptrundate=$(date --utc +%Y%m%d_%H%M%SZ)
 
 #---End Variables---
+
 
 set -e
 trap 'catch $? $LINENO' EXIT
@@ -82,7 +110,7 @@ if [ !  -f ${configfile} ] && [ ! -z ${DNSDOMAIN} ] ;  then
   curl -fs  --output ${configfile} --connect-timeout 2  $(dig TXT deploy.udz.${DNSDOMAIN} +short | tr -d '"')
 fi
 if [ !  -f ${configfile} ]; then
-  echo "Downloading config from github" 
+  echo "Downloading config from github"
 fi
 if [ !  -f ${configfile} ]; then echo "Failed to obtain config file abort!"; exit 1; fi
 
@@ -102,11 +130,13 @@ if (head -n1 config.yml | grep -qi "\$ANSIBLE_VAULT;"); then
   fi
   #Decrypting Config.
   CONFIG=$(${BINVDEC} ${configfile} ${VAULTPASS})
+  if [ ${#CONFIG} -lt 20 ];then  echo "Unable to decrypt config."; exit 1; fi
 else
   echo "Config NOT encrypted."
   CONFIG=$(cat ${configfile})
 fi
 ZFSPASS=$(echo "${CONFIG}"  | grep zfspass | cut -d ':' -f 2 | xargs)
+
 
 echo "$ZFSPASS"
 echo "(getconfig) finished"
@@ -128,9 +158,10 @@ wipefs -a ${TARGETDISK}
 echo "Creating disk partitions (CreatePartitions)"
 sgdisk -Z ${TARGETDISK}
 sgdisk -n ${efipartno}:1m:+512m -t 0:ef00 ${TARGETDISK}       #EFI
+sgdisk -n ${swappartno}:0:+16G -t 0:8200 ${TARGETDISK}        #Linux SWAP
 sgdisk -N ${zfspartno} -t 0:bf00 ${TARGETDISK}        #ZFS
-#sgdisk -n ${swappartno}:0:+16G -t 0:8200 ${TARGETDISK}        #Linux SWAP
-#sgdisk -N ${winpartno} -t 0:0x0700 ${TARGETDISK}              #Windows
+
+
 
 SEOF
 else
@@ -248,6 +279,7 @@ mount -t devpts pts ${mountdir}/dev/pts
 
 function Confirm()
 {
+if ${confirmflag}; then
 read -p "This Script will repartition and Destroy everyting on ${TARGETDISK} Do you want to proceed? (yes/no) " yn
 
 case $yn in
@@ -257,11 +289,15 @@ case $yn in
 	* ) echo invalid response;
 		exit 1;;
 esac
+else
+  echo "Targetdisk = ${TARGETDISK}"
+fi
 }
 
 function UmountAll() {
 #umount /sys/firmware/efi/efivars
-umount -n -R ${mountdir}
+sleep 2
+umount  -RA ${mountdir}
 #zpool export zroot
 }
 
@@ -316,12 +352,15 @@ then
   mkdir ${playbookdir} -p
 fi
 
+set -x
 cd ${playbookdir}
-git clone ${giturl}
+if [ ! -d "${playbookdir}/UDZFS" ]; then git clone ${giturl}; fi
 cd UDZFS/playbooks
-ansible-playbook playbook -e "hostname=$hostname" vartest.yml
-
+ansible-playbook -e "hostname=$hostname" vartest.yaml
+set +x
 CEOF
+
+echo "(RunPlayBookUbuntuDesktopZFS) done."
 
 }
 
@@ -354,6 +393,7 @@ UmountAll
 
 function Update()
 {
+Confirm
 getconfig
 PrepareChroot
 RunPlayBookUbuntuDesktopZFS

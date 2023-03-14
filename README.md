@@ -4,7 +4,9 @@ The goal of this script is to install Ubuntu 22.04 with ZFS on root (ZFSBootMenu
 
 ## Run
 
-`bash < <(wget -qO- https://raw.githubusercontent.com/TheoKeen/UDZFS/main/udz.sh)`
+`wget -qO- https://raw.githubusercontent.com/TheoKeen/UDZFS/main/udz.sh) | bash -s -- -f -d /dev/vda`
+
+
 
 ### Encrypty secrets
 
