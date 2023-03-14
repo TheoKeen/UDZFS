@@ -11,7 +11,7 @@
 #VAULTPASS - (Optional) Used for optionally decrypting config file
 #DNSDOMAIN - (Optional) Used for autodiscovering config file
 #TARGETDISK - (Optional but highly recommended to set manual) If not set wil use the first disk not being used for /cdrom. Will be ok for laptops with single drive.
-#HOSTNAME - (Optional) if not set will be ubz01
+#TARGETHOSTNAME - (Optional) if not set will be ubz01
 
 #Other configuration options are read from config file config.yml . If it doesn't exist AND the config file cannot be autodiscovered it will be downloaded from git.
 #Location of config on ubuntu live medium will be ~/config.yml
@@ -23,7 +23,7 @@ configfile=~/config.yml
 vaultpassfile=~/.vaultpass.txt
 giturl=https://github.com/TheoKeen/UDZFS
 
-hostname=${HOSTNAME:=ubz01}
+hostname=${TARGETHOSTNAME:=ubz01}
 poolname=$(echo ${hostname} | sed 's/-//')
 
 efipartno=15
@@ -71,6 +71,12 @@ catch() {
 
 function getconfig(){
 
+#Make sure curl is installed.
+curl -V > /dev/null || {
+apt-get update
+apt-get install -y curl
+}
+
 if [ !  -f ${configfile} ] && [ ! -z ${DNSDOMAIN} ] ;  then
   echo "Attempting auto discovery of config file"
   curl -fs  --output ${configfile} --connect-timeout 2  $(dig TXT deploy.udz.${DNSDOMAIN} +short | tr -d '"')
@@ -82,7 +88,12 @@ if [ !  -f ${configfile} ]; then echo "Failed to obtain config file abort!"; exi
 
 if (head -n1 config.yml | grep -qi "\$ANSIBLE_VAULT;"); then
   echo "Config encrypted!"
-  if [ ! -z ${VAULTPASS} ]; then echo ${VAULTPASS} > ${vaultpassfile}; fi
+  if [ ! -z ${VAULTPASS} ]; then
+    echo ${VAULTPASS} > ${vaultpassfile}
+  else
+    echo "Config encrypted and no VAULTPASS var found."
+    exit 1
+  fi
   if [ !  -f ${BINVDEC} ]; then
    echo "Downloading vault decrypt tool" #And verifying checksum
    curl -s -L ${URLGOVDEC} | sudo tee ${BINVDEC} | sha256sum -c <(echo "$BINVDEC_SHA256  -") || sudo rm -f ${BINVDEC}
@@ -97,6 +108,8 @@ else
 fi
 ZFSPASS=$(echo "${CONFIG}"  | grep zfspass | cut -d ':' -f 2 | xargs)
 
+echo "$ZFSPASS"
+echo "(getconfig) finished"
 
 }
 
@@ -131,6 +144,8 @@ dosfslabel ${EFIPART} UEFI
 
 function CreateZFSPool()
 {
+set -x
+
 echo "${ZFSPASS}" > /etc/zfs/zroot.key
 chmod 000 /etc/zfs/zroot.key
 
@@ -146,6 +161,8 @@ zpool create -f -o ashift=12 \
  -m none ${poolname} "${ZFSPART}"
 
 zpool set cachefile=/etc/zfs/zpool.cache ${poolname}
+
+set +x
 }
 
 function CreateZFSfs()
@@ -274,10 +291,15 @@ function InstallAnsible()
 {
 #Enter the chroot
 sudo chroot ${mountdir} /bin/bash  <<CEOF
-sexport DEBIAN_FRONTEND=noninteractive
+
+export DEBIAN_FRONTEND=noninteractive
 apt-get install -y python3-pip git
 pip install --upgrade pip
 pip install ansible
+
+sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+dpkg-reconfigure --frontend=noninteractive locales
+update-locale LANG=en_US.UTF-8
 
 CEOF
 }
@@ -296,7 +318,7 @@ fi
 
 cd ${playbookdir}
 git clone ${giturl}
-cd UbuntuDesktopZFS/playbooks
+cd UDZFS/playbooks
 ansible-playbook playbook -e "hostname=$hostname" vartest.yml
 
 CEOF
@@ -305,15 +327,16 @@ CEOF
 
 function debug()
 {
+getconfig
 PrepareChroot
 read -n 1 -p "Press any key to continue"
-
 UmountAll
 }
 
 function Install()
 {
 Confirm
+getconfig
 init
 CreatePartitions
 CreateZFSPool
@@ -324,16 +347,16 @@ CopyFilesBeforeInstall
 PrepareChroot
 CreateAptSources
 InstallAnsible
-
+RunPlayBookUbuntuDesktopZFS
 CopyFilesFinal
 UmountAll
 }
 
 function Update()
 {
+getconfig
 PrepareChroot
-CreateAptSources
-InstallSanoid
+RunPlayBookUbuntuDesktopZFS
 UmountAll
 
 echo "update"
@@ -352,7 +375,7 @@ UmountAll
 
 #UmountAll
 #debug
-#Install 2>&1 | tee /var/log/${scriptrundate}-${codename}-install.log
+Install 2>&1 | tee /var/log/${scriptrundate}-${codename}-install.log
 #UmountAll
-#Update 2>&1 | tee /varlog/${scriptrundate}-${codename}-update.log
+#Update 2>&1 | tee /var/log/${scriptrundate}-${codename}-update.log
 #test 2>&1 | tee ./my.log
