@@ -1,0 +1,60 @@
+---
+# tasks file for configurezfs
+
+- name: "Build hosts file"
+  lineinfile:
+    path: /etc/hosts
+    regexp: '.*{{ hostname }}$'
+    line: '127.0.0.1 {{ hostname }}'
+    state: present
+
+- name: Hold back selected Packages that conflict with ZFS
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ zfsholdpackages }}"
+
+- name: Install ZFS packages
+  ansible.builtin.package:
+    name: "{{ zfspackages }}"
+    state: present
+
+- name: Enable ZFS services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: yes
+  loop: "{{ zfsservices }}"
+
+- name: Set ZFS boot properties on root dataset
+  community.general.zfs:
+    name: "vzfs02/ROOT/{{ ansible_distribution|lower }}"
+    state: present
+    extra_zfs_properties:
+      "{{ rootds.extra_zfs_properties }}"
+
+- name: Protect Key material in intitramfs
+  ansible.builtin.lineinfile:
+    path: /etc/initramfs-tools/conf.d/umask.conf
+    create: true
+    regexp: '^UMASK='
+    line: UMASK=0077
+  notify: update initramfs
+
+- name: Create ZBM directory
+  file:
+    path: /boot/efi/EFI/ZBM/
+    state: directory
+
+- name: Download ZFSBootMenu
+  ansible.builtin.get_url:
+    url: https://get.zfsbootmenu.org/efi
+    dest: /boot/efi/EFI/ZBM/VMLINUZ.EFI
+
+- name: Create backup copy of ZFSBootMenu
+  ansible.builtin.copy:
+    src: /boot/efi/EFI/ZBM/VMLINUZ.EFI
+    dest: /boot/efi/EFI/ZBM/VMLINUZ-BACKUP.EFI
+  notify: Install ZFSBootMenu
+
+
+

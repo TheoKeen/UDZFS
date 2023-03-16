@@ -1,0 +1,28 @@
+---
+
+# Packages not to be installed.
+zfsholdpackages:
+  - grub-pc 
+  - grub-pc-bin 
+  - os-prober
+
+# zfspackages that are needed.
+zfspackages:
+  - zfs-initramfs
+  - zfsutils-linux
+  - linux-generic
+  - console-setup
+  - dosfstools
+  - efibootmgr
+
+# ZFS Service to be enabled.
+zfsservices:
+  - zfs.target
+  - zfs-import-cache
+  - zfs-mount
+  - zfs-import.target
+
+rootds:
+  extra_zfs_properties:
+    "org.zfsbootmenu:commandline": "quiet loglevel=4"
+    "org.zfsbootmenu:keysource": "vzfs02/ROOT"

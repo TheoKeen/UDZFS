@@ -1,0 +1,22 @@
+---
+# handlers file for configurezfs
+
+- name: update initramfs
+  listen: update initrd
+  ansible.builtin.command:
+    cmd: >
+      update-initramfs -k all -u
+
+- name: Install ZFSBootMenu
+  environment:
+        efipartno: "{{ efipartno }}"
+        targetdisk: "{{ targetdisk }}"
+  ansible.builtin.shell:
+    cmd: |
+      efibootmgr -c -d "${targetdisk}" -p ${efipartno} \
+        -L "ZFSBootMenu (Backup)" \
+        -l \\\EFI\\\ZBM\\\VMLINUZ-BACKUP.EFI
+
+       efibootmgr -c -d "${targetdisk}" -p ${efipartno} \
+        -L "ZFSBootMenu" \
+        -l \\\EFI\\\ZBM\\\VMLINUZ.EFI

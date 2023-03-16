@@ -1,0 +1,8 @@
+---
+# tasks file for InstallUbuntuDesktop
+
+
+- name: Install software using package
+  ansible.builtin.package:
+    name: "{{ desktoppackages }}"
+    state: present

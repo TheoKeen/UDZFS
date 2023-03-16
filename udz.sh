@@ -343,7 +343,7 @@ CEOF
 function RunPlayBookUbuntuDesktopZFS()
 {
 
-playbookdir=/var/data/apb
+playbookdir=/var/apb
 #Enter the chroot
 sudo chroot ${mountdir} /bin/bash  <<CEOF
 
@@ -356,7 +356,7 @@ set -x
 cd ${playbookdir}
 if [ ! -d "${playbookdir}/UDZFS" ]; then git clone ${giturl}; fi
 cd UDZFS/playbooks
-ansible-playbook -e "hostname=$hostname" vartest.yaml
+ansible-playbook -e "hostname=$hostname targetdisk=${TARGETDISK} efipart=${efipartno}" ChrootInstall.yaml
 set +x
 CEOF
 

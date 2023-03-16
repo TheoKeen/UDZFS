@@ -1,0 +1,13 @@
+---
+# vars file for InstallUbuntuDesktop
+desktoppackages:
+  - ubuntu-desktop-minimal
+  - git
+  - socat
+  - nano
+
+# Packages not to be installed
+holdpackages:
+  - grub-pc 
+  - grub-pc-bin 
+  - os-prober
