@@ -1,7 +1,0 @@
----
-# tasks file for InstallUbuntuDesktop
-
-- name: Set a hostname specifying strategy
-  ansible.builtin.hostname:
-    name: 
-    use: debian
