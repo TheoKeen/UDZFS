@@ -1,19 +1,45 @@
-Security:
-  Keys:
-    zfspass: a123456
-Config:
-   aptmirror: http://nl.archive.ubuntu.com/ubuntu
+#Example config file. Please change keys and passwords before use
+#private and public keys need to be base64 encoded. 
+#If storing private keys and config please encrypt config file and protect the keys with a password.
+#To base64 encode the keys: `cat .ssh/id_ed25519 | base64 -w 0`
+#Example keys use the password 'Password123'
+Keys:
+  zfspass: 12345678
 Services:
   ssh:
     name: ssh
     state: enabled
 Users:
-  Bob: 
-    name: bob
-    password: password123
-  Sara:
-    name: sara
-    password: password456
-    ssh-private-keys:
-      - s1e
-      - dsd
+  - username: alice
+    name: Alice Appleworth
+    telephone: 123-456-7890
+    password: "{{ 'password456' | password_hash('sha512') }}"
+  - username: bob
+    name: Bob Bananarama
+    password: "{{ 'password456' | password_hash('sha512') }}"
+    telephone: 987-654-3210
+    groups:
+      - sudo
+      - staff
+    ssh_private_keys:
+      - filename: id_ed25519
+        value: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQ21GbGN6STFOaTFqZEhJQUFBQUdZbU55ZVhCMEFBQUFHQUFBQUJCeGVlZjRNTAorclBwY0xzYUU0c3VMdUFBQUFFQUFBQUFFQUFBQXpBQUFBQzNOemFDMWxaREkxTlRFNUFBQUFJT1RJOXJUS3FjdUp4VUh6CnNDVm53QWpaNmx4STl1Nld4aFZ4ckhxTVg1UDlBQUFBa0dnNUFKczYzT2FQblllY3ZEbEFwWkIwM2VjSTcrS256VXNVSy8KcVUvTXhSK1pLeklCOFM1ekRsOUhYTVU4MU9EMWJVYnZNWnQ2YWMya2lJT05PNitMT1h5RVhHcU9kVzFZV01TVmg5dnNSNgpHdk9DaWN2c2NTZ2FBSy9VbGt3Z01XN1E5bCtBNm9TbEtTUE1hY2o5cGkySkYwczNKb3NkZmhHbDRsWjNOWWhEUGlVbUNrCkhyY1ltSGN2NVpTRWNDaUE9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K
+    ssh_public_keys:
+      - filename: id_ed25519.pub
+        value: c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSU9USTlyVEtxY3VKeFVIenNDVm53QWpaNmx4STl1Nld4aFZ4ckhxTVg1UDkgYm9iQHVidW50dQo=
+  - username: joe
+    name: Joe Res
+    password: "{{ 'password456' | password_hash('sha512') }}"
+    telephone: 987-654-3210
+    groups:
+      - staff
+    ssh_private_keys:
+      - filename: id_ed25519
+        value: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQ21GbGN6STFOaTFqZEhJQUFBQUdZbU55ZVhCMEFBQUFHQUFBQUJCL0w4QmRteQpEOStDaHZ0UTRnUThOdEFBQUFFQUFBQUFFQUFBQXpBQUFBQzNOemFDMWxaREkxTlRFNUFBQUFJSGxoTjFPQ3lXTGl2czF3Cno3K3RSa3FKMkg2dGlRbEx0WityN1ZRMmtzclBBQUFBa0JRTTNENGpGZ08wL3lrZkFib3FVampicXhQTU9JL2JvV3M4SXoKVzhEZHAyTEpJVnRZaWo5ZmcrZnVIRVloR0V6bXV4c3NKSHNTR1NFbjBVS2FLYWI3czdMOXFhNG9Da3lSK3F3blRxYkZvKwp2VXF5SGk2aWczNTZoYnQ0UEREaDM3VDlVbTlhUSt3bkVFZk50L1dPRmpEcTNoeXFjOXpaNElheGZPZWI3REZNM2xOVGh5CmxscVdyWmxnTDhqK1QzNHc9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K
+      - filename: test2
+        value: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQ21GbGN6STFOaTFqZEhJQUFBQUdZbU55ZVhCMEFBQUFHQUFBQUJCT1RrRklncApPUnhWeFB4aWprSGk1ZUFBQUFFQUFBQUFFQUFBQXpBQUFBQzNOemFDMWxaREkxTlRFNUFBQUFJTjhyS0hGVUltQzlqMUtoClM3UERKbDh5VmFLNUttUE93VHprYW50YXM1VU5BQUFBa0VxUXhrSkVydHRZamY0UjNtd1ZXRmJHS3ptNTliR3dYZnBlUWkKTEVYbmNPYVZiOU9qNXRCeGVNYkJIdmdjZWFWdXFSUGJhQjZkemp1QTNuU1A0aE9aaVJlMGwvZ0tSYm02c3p5bWNjR0tpeQpRdEtwNld5Wml4bUpqckRQcEdKTlVibFVKM21HMEhnN1Y0WHVqVDNLOHNoQjF6UTNZWGdQK2M5U2R0T2ZtUGhBNDFLTXZMCnhKRjFrekZUeVhOeHJJa2c9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K
+    ssh_public_keys:
+      - filename: id_ed25519.pub
+        value: c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUhsaE4xT0N5V0xpdnMxd3o3K3RSa3FKMkg2dGlRbEx0WityN1ZRMmtzclAgam9lQHVidW50dQo=
+      - filename: test2.pub
+        value: c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSU44cktIRlVJbUM5ajFLaFM3UERKbDh5VmFLNUttUE93VHprYW50YXM1VU4gam9lQHVidW50dQo=

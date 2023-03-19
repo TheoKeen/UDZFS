@@ -8,6 +8,6 @@ desktoppackages:
 
 # Packages not to be installed
 holdpackages:
-  - grub-pc 
-  - grub-pc-bin 
+  - grub-pc
+  - grub-pc-bin
   - os-prober

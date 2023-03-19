@@ -9,8 +9,8 @@
 
 - name: Install ZFSBootMenu
   environment:
-        efipartno: "{{ efipartno }}"
-        targetdisk: "{{ targetdisk }}"
+    efipartno: "{{ efipartno }}"
+    targetdisk: "{{ targetdisk }}"
   ansible.builtin.shell:
     cmd: |
       efibootmgr -c -d "${targetdisk}" -p ${efipartno} \

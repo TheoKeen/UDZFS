@@ -356,7 +356,7 @@ set -x
 cd ${playbookdir}
 if [ ! -d "${playbookdir}/UDZFS" ]; then git clone ${giturl}; fi
 cd UDZFS/playbooks
-ansible-playbook -e "hostname=$hostname targetdisk=${TARGETDISK} efipart=${efipartno}" ChrootInstall.yaml
+ansible-playbook -e "hostname=$hostname targetdisk=${TARGETDISK} efipartno=${efipartno} poolname=${poolname}" ChrootInstall.yaml
 set +x
 CEOF
 

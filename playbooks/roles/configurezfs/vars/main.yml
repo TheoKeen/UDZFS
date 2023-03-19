@@ -2,8 +2,8 @@
 
 # Packages not to be installed.
 zfsholdpackages:
-  - grub-pc 
-  - grub-pc-bin 
+  - grub-pc
+  - grub-pc-bin
   - os-prober
 
 # zfspackages that are needed.

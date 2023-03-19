@@ -3,7 +3,9 @@
   hosts: localhost
   become: true
   gather_facts: true
+  vars_files:
+    - ~/config.yml
 
   roles:
     - role: configurezfs
-    #- role: installubuntudesktop
+    - role: installubuntudesktop

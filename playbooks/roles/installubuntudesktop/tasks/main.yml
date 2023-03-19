@@ -1,8 +1,48 @@
 ---
 # tasks file for InstallUbuntuDesktop
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/subelements_lookup.html
+#https://groups.google.com/g/ansible-project/c/8XJkHQgttLA
 
-
-- name: Install software using package
+- name: Install software using package (This can take a wile..)
   ansible.builtin.package:
     name: "{{ desktoppackages }}"
     state: present
+
+- name: Add the users from config file
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    shell: /bin/bash
+    groups: "{{ item.groups | default('') |  join(', ') }}"
+    append: yes
+  loop: "{{ Users }}"
+
+- name: Create .ssh directories for users
+  file:
+    path: "/home/{{ item.username }}/.ssh"
+    state: directory
+    mode: 0700
+  loop: "{{ Users }}"
+
+- name: Copy ssh private keys
+  ansible.builtin.copy:
+    content: "{{ item.1.value | b64decode }}"
+    dest: "/home/{{ item.0.username }}/.ssh/{{ item.1.filename }}"
+    owner: "{{ item.0.username }}"
+    group: "{{ item.0.username }}"
+    mode: '0600'
+  loop: "{{ q('ansible.builtin.subelements', Users, 'ssh_private_keys', {'skip_missing': True})  }}"
+  loop_control:
+    label: "{{ item.0.name }}"
+
+- name: Copy ssh public keys
+  ansible.builtin.copy:
+    content: "{{ item.1.value | b64decode }}"
+    dest: "/home/{{ item.0.username }}/.ssh/{{ item.1.filename }}"
+    owner: "{{ item.0.username }}"
+    group: "{{ item.0.username }}"
+    mode: '0644'
+  loop: "{{ q('ansible.builtin.subelements', Users, 'ssh_public_keys', {'skip_missing': True})  }}"
+  loop_control:
+    label: "{{ item.0.name }}"
+
+#Create avatars

@@ -22,12 +22,12 @@
 - name: Enable ZFS services
   ansible.builtin.service:
     name: "{{ item }}"
-    enabled: yes
+    enabled: true
   loop: "{{ zfsservices }}"
 
 - name: Set ZFS boot properties on root dataset
   community.general.zfs:
-    name: "vzfs02/ROOT/{{ ansible_distribution|lower }}"
+    name: "{{ poolname }}/ROOT/{{ ansible_distribution|lower }}"
     state: present
     extra_zfs_properties:
       "{{ rootds.extra_zfs_properties }}"
@@ -36,6 +36,7 @@
   ansible.builtin.lineinfile:
     path: /etc/initramfs-tools/conf.d/umask.conf
     create: true
+    mode: 0644
     regexp: '^UMASK='
     line: UMASK=0077
   notify: update initramfs
@@ -44,6 +45,7 @@
   file:
     path: /boot/efi/EFI/ZBM/
     state: directory
+    mode: 0755
 
 - name: Download ZFSBootMenu
   ansible.builtin.get_url:
@@ -54,7 +56,5 @@
   ansible.builtin.copy:
     src: /boot/efi/EFI/ZBM/VMLINUZ.EFI
     dest: /boot/efi/EFI/ZBM/VMLINUZ-BACKUP.EFI
+    mode: 0755
   notify: Install ZFSBootMenu
-
-
-
