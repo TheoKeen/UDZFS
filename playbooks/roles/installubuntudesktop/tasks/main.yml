@@ -46,3 +46,11 @@
     label: "{{ item.0.name }}"
 
 #Create avatars
+
+- name: Download avatar
+  ansible.builtin.get_url:
+    url: "{{ item.avatar }}"
+    dest: /var/lib/AccountsService/icons/{{ item.username }}"
+    mode: '0440'
+    owner: "{{ item.username }}"
+  loop: "{{ Users | selectattr('avatar', 'defined') }}"

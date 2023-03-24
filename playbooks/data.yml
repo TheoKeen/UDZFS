@@ -12,10 +12,13 @@ Services:
 Users:
   - username: alice
     name: Alice Appleworth
+    telephone: 123-456-7890
     password: "{{ 'password456' | password_hash('sha512') }}"
   - username: bob
     name: Bob Bananarama
     password: "{{ 'password456' | password_hash('sha512') }}"
+    telephone: 987-654-3210
+    avatar: "https://www.shareicon.net/data/64x64/2016/11/21/854773_c3p0_432x512.png"
     groups:
       - sudo
       - staff
@@ -28,6 +31,8 @@ Users:
   - username: joe
     name: Joe Res
     password: "{{ 'password456' | password_hash('sha512') }}"
+    telephone: 987-654-3210
+    avatar: "https://www.shareicon.net/download/64x64/2016/05/24/770137_man_512x512.png"
     groups:
       - staff
     ssh_private_keys:
