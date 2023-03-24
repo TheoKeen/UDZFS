@@ -18,7 +18,7 @@ Users:
     name: Bob Bananarama
     password: "{{ 'password456' | password_hash('sha512') }}"
     telephone: 987-654-3210
-    avatar: "https://www.shareicon.net/data/64x64/2016/11/21/854773_c3p0_432x512.png"
+    avatar: "/usr/share/pixmaps/faces/butterfly.png"
     groups:
       - sudo
       - staff

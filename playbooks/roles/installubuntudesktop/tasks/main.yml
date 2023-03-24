@@ -11,6 +11,7 @@
 - name: Add the users from config file
   ansible.builtin.user:
     name: "{{ item.username }}"
+    password: "{{ item.password }}"
     shell: /bin/bash
     groups: "{{ item.groups | default('') |  join(', ') }}"
     append: yes
@@ -50,7 +51,16 @@
 - name: Download avatar
   ansible.builtin.get_url:
     url: "{{ item.avatar }}"
-    dest: /var/lib/AccountsService/icons/{{ item.username }}"
-    mode: '0440'
+    dest: "/var/lib/AccountsService/icons/{{ item.username }}"
+    mode: '0644'
     owner: "{{ item.username }}"
+  loop: "{{ Users | selectattr('avatar', 'defined') }}"
+
+
+- name: Template AccountsService User
+  ansible.builtin.template:
+    src: templates/ASUser.j2
+    dest: "/var/lib/AccountsService/users/{{ item.username }}"
+    owner: "{{ item.username }}"
+    mode: '0444'
   loop: "{{ Users | selectattr('avatar', 'defined') }}"
