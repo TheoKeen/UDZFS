@@ -5,6 +5,8 @@
 #Example keys use the password 'Password123'
 Keys:
   zfspass: 12345678
+Config:
+  gdm3wallpaper: "file:///usr/share/backgrounds/DSC2943_by_kcpru.jpg"
 Services:
   ssh:
     name: ssh
@@ -18,8 +20,8 @@ Users:
     name: Bob Bananarama
     password: "{{ 'password456' | password_hash('sha512') }}"
     telephone: 987-654-3210
-    avatar: "/usr/share/pixmaps/faces/butterfly.png"
-    wallpaper: "/usr/share/backgrounds/Mirror_by_Uday_Nakade.jpg"
+    avatar: "file:///usr/share/pixmaps/faces/butterfly.png"
+    wallpaper: "file:///usr/share/backgrounds/Mirror_by_Uday_Nakade.jpg"
     groups:
       - sudo
       - staff
