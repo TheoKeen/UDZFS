@@ -1,5 +1,12 @@
 
 
+
+
+- name: Install software using package (This can take a wile..)
+  ansible.builtin.package:
+    name: "{{ gdm3editpackages }}"
+    state: present
+
 #Script from https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background
 - name: Change GDM3 background
   ansible.builtin.shell:
