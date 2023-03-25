@@ -226,7 +226,7 @@ background-position: center; }' >$GDM_RESOURCE_CONFIG_NAME.css
 
     SET_GRESOURCE
 
-    exit 1
+    exit 0
 
   else
     echo -e "${BRed}
@@ -268,7 +268,7 @@ background-color: '$2'; }' >$GDM_RESOURCE_CONFIG_NAME.css
 
   SET_GRESOURCE
 
-  exit 1
+  exit 0
   ;;
   --gradient)
   if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]; then
@@ -314,7 +314,7 @@ background-gradient-end: '$4'; }' >$GDM_RESOURCE_CONFIG_NAME.css
 
   SET_GRESOURCE
 
-  exit 1
+  exit 0
   ;;
   *) 
     echo -e "Use the options ${BWhi}--image |--color | --gradient | --help | --reset${RCol}"

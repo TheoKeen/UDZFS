@@ -6,6 +6,13 @@ desktoppackages:
   - socat
   - nano
 
+
+gdm3editpackages:
+  - libglib2.0-dev-bin
+
+dconfpackages:
+  - python3-psutil
+
 # Packages not to be installed
 holdpackages:
   - grub-pc

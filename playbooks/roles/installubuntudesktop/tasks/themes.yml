@@ -1,13 +1,28 @@
+---
 
-
-
-
-- name: Install software using package (This can take a wile..)
+- name: Install software using package 
   ansible.builtin.package:
     name: "{{ gdm3editpackages }}"
     state: present
 
 #Script from https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background
 - name: Change GDM3 background
-  ansible.builtin.shell:
-    cmd: files/ubuntu-gdm-set-background --image /usr/share/backgrounds/DSC2943_by_kcpru.jpg
+  ansible.builtin.script:
+    cmd: ubuntu-gdm-set-background --image /usr/share/backgrounds/DSC2943_by_kcpru.jpg
+
+
+- name: Install software using package
+  ansible.builtin.package:
+    name: "{{ dconfpackages }}"
+    state: present
+
+
+- name: Set GNOME Wallpaper
+  become_user: "{{ item.username }}"
+  dconf: key="/org/gnome/desktop/background/picture-uri" value="'file://{{ item.wallpaper }}'"
+  loop: "{{ Users | selectattr('wallpaper', 'defined') }}"
+
+- name: Set GNOME Wallpaper scale
+  become_user: "{{ item.username }}"
+  dconf: key="/org/gnome/desktop/background/picture-options" value="'scaled'"
+  loop: "{{ Users | selectattr('wallpaper', 'defined') }}"

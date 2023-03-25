@@ -19,6 +19,7 @@ Users:
     password: "{{ 'password456' | password_hash('sha512') }}"
     telephone: 987-654-3210
     avatar: "/usr/share/pixmaps/faces/butterfly.png"
+    wallpaper: "/usr/share/backgrounds/Mirror_by_Uday_Nakade.jpg"
     groups:
       - sudo
       - staff

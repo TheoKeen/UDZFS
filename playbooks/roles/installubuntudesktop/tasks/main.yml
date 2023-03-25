@@ -64,3 +64,6 @@
     owner: "{{ item.username }}"
     mode: '0444'
   loop: "{{ Users | selectattr('avatar', 'defined') }}"
+
+- name: Set GDM3 Background
+  include_tasks: themes.yml
