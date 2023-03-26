@@ -10,6 +10,15 @@ desktoppackages:
 gdm3editpackages:
   - libglib2.0-dev-bin
 
+sanoidpackages:
+  - debhelper 
+  - libcapture-tiny-perl 
+  - libconfig-inifiles-perl 
+  - pv 
+  - lzop 
+  - mbuffer 
+  - build-essential
+
 dconfpackages:
   - python3-psutil
 

@@ -1,0 +1,13 @@
+---
+
+
+- name: Install Sanoid dependencies
+  ansible.builtin.package:
+    name: "{{ sanoidpackages }}"
+    state: present
+
+- name: Install Sanoid
+  ansible.builtin.script:
+    cmd: InstallSanoid.sh
+  environment:
+    poolname: "{{ poolname }}"

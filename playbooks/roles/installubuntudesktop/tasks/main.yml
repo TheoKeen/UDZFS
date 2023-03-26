@@ -67,3 +67,6 @@
 
 - name: Set GDM3 Background
   include_tasks: themes.yml
+
+- name: Install Sanoid
+  include_tasks: sanoid.yml
