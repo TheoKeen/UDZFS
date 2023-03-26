@@ -1,0 +1,39 @@
+---
+
+#Fix snaps
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: /usr/lib/systemd/system/snapd.mounts-pre.target
+    dest: /etc/systemd/system/snapd.mounts-pre.target
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: /usr/lib/systemd/system/snapd.mounts.target
+    dest: /etc/systemd/system/snapd.mounts.target
+    owner: root
+    group: root
+    mode: '0644'
+
+#Add Additional apps
+- name: Install additional apps
+  ansible.builtin.package:
+    name: "{{ additionalapps }}"
+    state: present
+
+
+- name: Add the flathub flatpak repository remote to the user installation
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: System
+
+- name: Install the VLC flatpak
+  flatpak:
+    name: org.videolan.VLC
+    state: present
+    remote: gnome
+

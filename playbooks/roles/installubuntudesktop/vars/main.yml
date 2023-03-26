@@ -6,7 +6,6 @@ desktoppackages:
   - socat
   - nano
 
-
 gdm3editpackages:
   - libglib2.0-dev-bin
 
@@ -27,3 +26,7 @@ holdpackages:
   - grub-pc
   - grub-pc-bin
   - os-prober
+
+additionalapps:
+  -
+  - firefox
