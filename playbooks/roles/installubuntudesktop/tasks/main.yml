@@ -16,3 +16,15 @@
 
 - name: Install Sanoid
   include_tasks: sanoid.yml
+
+- name: Install snaps
+  include_tasks: snaps.yml
+
+- name: Install flatpak
+  include_tasks: flatpak.yml
+
+- name: Install tailscale
+  include_tasks: tailscale.yml
+
+- name: Install Brave browser
+  include_tasks: tailscale.yml

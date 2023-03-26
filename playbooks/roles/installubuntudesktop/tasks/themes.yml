@@ -27,7 +27,6 @@
     owner: "{{ item.username }}"
   loop: "{{ Users | selectattr('avatar', 'defined') }}"
 
-
 - name: Template AccountsService User
   ansible.builtin.template:
     src: templates/ASUser.j2

@@ -27,6 +27,20 @@ holdpackages:
   - grub-pc-bin
   - os-prober
 
-additionalapps:
-  -
+
+flathubpackages:
+  - org.libreoffice.LibreOffice
+  - org.videolan.VLC
+
+snappackages:
   - firefox
+
+tailscale_apt_keyring_path: /usr/share/keyrings/tailscale-archive-keyring.gpg
+tailscale_apt_deb: deb [signed-by={{ tailscale_apt_keyring_path }}] https://pkgs.tailscale.com/{{ release_stability | lower }}/{{ tailscale_debian_distro[ansible_distribution | lower] }} {{ ansible_distribution_release | lower }} main
+tailscale_apt_signkey: https://pkgs.tailscale.com/{{ release_stability | lower }}/{{ tailscale_debian_distro[ansible_distribution | lower] }}/{{ ansible_distribution_release | lower }}.noarmor.gpg
+
+tailscale_apt_dependencies:
+  - gnupg2
+  - gnupg-agent
+  - apt-transport-https
+  - python3-apt
