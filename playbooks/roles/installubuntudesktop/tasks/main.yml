@@ -8,64 +8,10 @@
     name: "{{ desktoppackages }}"
     state: present
 
-- name: Add the users from config file
-  ansible.builtin.user:
-    name: "{{ item.username }}"
-    password: "{{ item.password }}"
-    shell: /bin/bash
-    groups: "{{ item.groups | default('') |  join(', ') }}"
-    append: yes
-  loop: "{{ Users }}"
+- name: Add users
+  include_tasks: users.yml
 
-- name: Create .ssh directories for users
-  file:
-    path: "/home/{{ item.username }}/.ssh"
-    state: directory
-    mode: 0700
-  loop: "{{ Users }}"
-
-- name: Copy ssh private keys
-  ansible.builtin.copy:
-    content: "{{ item.1.value | b64decode }}"
-    dest: "/home/{{ item.0.username }}/.ssh/{{ item.1.filename }}"
-    owner: "{{ item.0.username }}"
-    group: "{{ item.0.username }}"
-    mode: '0600'
-  loop: "{{ q('ansible.builtin.subelements', Users, 'ssh_private_keys', {'skip_missing': True})  }}"
-  loop_control:
-    label: "{{ item.0.name }}"
-
-- name: Copy ssh public keys
-  ansible.builtin.copy:
-    content: "{{ item.1.value | b64decode }}"
-    dest: "/home/{{ item.0.username }}/.ssh/{{ item.1.filename }}"
-    owner: "{{ item.0.username }}"
-    group: "{{ item.0.username }}"
-    mode: '0644'
-  loop: "{{ q('ansible.builtin.subelements', Users, 'ssh_public_keys', {'skip_missing': True})  }}"
-  loop_control:
-    label: "{{ item.0.name }}"
-
-#Create avatars
-
-- name: Download avatar
-  ansible.builtin.get_url:
-    url: "{{ item.avatar }}"
-    dest: "/var/lib/AccountsService/icons/{{ item.username }}"
-    mode: '0644'
-    owner: "{{ item.username }}"
-  loop: "{{ Users | selectattr('avatar', 'defined') }}"
-
-
-- name: Template AccountsService User
-  ansible.builtin.template:
-    src: templates/ASUser.j2
-    dest: "/var/lib/AccountsService/users/{{ item.username }}"
-    owner: "{{ item.username }}"
-    mode: '0444'
-  loop: "{{ Users | selectattr('avatar', 'defined') }}"
-
-- name: Set GDM3 Background
+- name: Set wallpapers and avatars
   include_tasks: themes.yml
 
 - name: Install Sanoid

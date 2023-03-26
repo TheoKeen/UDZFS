@@ -1,5 +1,6 @@
 ---
 
+#Set GDM3 background
 - name: Install GDM edit dependencies
   ansible.builtin.package:
     name: "{{ gdm3editpackages }}"
@@ -11,10 +12,31 @@
     dest: "/usr/share/backgrounds/UDZFS"
     mode: '0644'
 
-#Script from https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background
+  #Script from https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background
 - name: Change GDM3 background
   ansible.builtin.script:
     cmd: ubuntu-gdm-set-background --image /usr/share/backgrounds/UDZFS
+
+#Create avatars
+
+- name: Download avatar
+  ansible.builtin.get_url:
+    url: "{{ item.avatar }}"
+    dest: "/var/lib/AccountsService/icons/{{ item.username }}"
+    mode: '0644'
+    owner: "{{ item.username }}"
+  loop: "{{ Users | selectattr('avatar', 'defined') }}"
+
+
+- name: Template AccountsService User
+  ansible.builtin.template:
+    src: templates/ASUser.j2
+    dest: "/var/lib/AccountsService/users/{{ item.username }}"
+    owner: "{{ item.username }}"
+    mode: '0444'
+  loop: "{{ Users | selectattr('avatar', 'defined') }}"
+
+#Set wallpaper
 
 - name: Install dconf edit dependencies
   ansible.builtin.package:

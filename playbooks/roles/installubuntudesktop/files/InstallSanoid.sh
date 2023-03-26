@@ -5,7 +5,6 @@ function InstallSanoid()
 
 source /etc/os-release
 
-
 mkdir /opt/compose/build -p
 cd /opt/compose/build
 # Download the repo as root to avoid changing permissions later
@@ -16,11 +15,6 @@ git checkout $(git tag | grep "^v" | tail -n 1)
 ln -s packages/debian .
 dpkg-buildpackage -uc -us
 apt install ../sanoid_*_all.deb
-
-# enable and start the sanoid timer
-sudo systemctl enable sanoid.timer
-sudo systemctl start sanoid.timer
-
 
 cat << EOF >  /etc/sanoid/sanoid.conf
 [${poolname}/ROOT/${ID}]
@@ -51,7 +45,6 @@ EOF
 
 # enable and start the sanoid timer
 sudo systemctl enable sanoid.timer
-#sudo systemctl start sanoid.timer
 
 }
 
