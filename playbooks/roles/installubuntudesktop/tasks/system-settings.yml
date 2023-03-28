@@ -1,0 +1,24 @@
+---
+
+- name: Install dconf edit dependencies
+  ansible.builtin.package:
+    name: "{{ dconfpackages }}"
+    state: present
+
+#Set GDM3 background
+- name: Install GDM edit dependencies
+  ansible.builtin.package:
+    name: "{{ gdm3editpackages }}"
+    state: present
+
+- name: Download GDM3 Wallpaper
+  ansible.builtin.get_url:
+    url: "{{ Config.gdm3wallpaper }}"
+    dest: "/usr/share/backgrounds/UDZFS"
+    mode: '0644'
+
+  #Script from https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background
+- name: Change GDM3 background
+  ansible.builtin.script:
+    cmd: ubuntu-gdm-set-background --image /usr/share/backgrounds/UDZFS
+

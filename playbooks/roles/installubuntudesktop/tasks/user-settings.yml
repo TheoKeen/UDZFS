@@ -1,27 +1,70 @@
 ---
 
+#Create avatars
+
+- name: Download avatar - {{ item.username }}
+  ansible.builtin.get_url:
+    url: "{{ item.avatar }}"
+    dest: "/var/lib/AccountsService/icons/{{ item.username }}"
+    mode: '0644'
+    owner: "{{ item.username }}"
+  when: item.avatar is defined
+
+- name: Template AccountsService User - {{ item.username }}
+  ansible.builtin.template:
+    src: templates/ASUser.j2
+    dest: "/var/lib/AccountsService/users/{{ item.username }}"
+    owner: "{{ item.username }}"
+    mode: '0444'
+  when: item.avatar is defined
+
+#Set wallpaper
+
+- name: Download Wallpapers - {{ item.username }}
+  ansible.builtin.get_url:
+    url: "{{ item.wallpaper }}"
+    dest: "/home/{{ item.username }}/.wallpaper"
+    mode: '0644'
+    owner: "{{ item.username }}"
+  when: item.wallpaper is defined
+
+- name: Set GNOME Wallpaper - {{ item.username }}
+  become_user: "{{ item.username }}"
+  dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:///home/{{ item.username }}/.wallpaper'"
+  when: item.wallpaper is defined
+
+- name: Set GNOME Wallpaper scale - {{ item.username }}
+  become_user: "{{ item.username }}"
+  dconf: key="/org/gnome/desktop/background/picture-options" value="'scaled'"
+  loop: "{{ Users | selectattr('wallpaper', 'defined') }}"
 - name: workspaces span displays
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/mutter/workspaces-only-on-primary"
     value: "false"
 
-- name: app-switcher on the current workspace only
+# Workspace settings
+
+- name: app-switcher on the current workspace only - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/shell/app-switcher/current-workspace-only"
     value: "true"
 
-- name: show battery percentage
+- name: show battery percentage - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/desktop/interface/show-battery-percentage"
     value: "true"
 
-- name: show battery percentage
+- name: Set dock favorites - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/shell/favorite-apps"
     value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']"
 
 
+- name: numlock on - {{ item.username }}
+  dconf:
+    key: "/org/gnome/desktop/peripherals/keyboard/numlock-state"
+    value: "true"

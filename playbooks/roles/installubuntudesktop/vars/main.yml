@@ -5,6 +5,7 @@ desktoppackages:
   - git
   - socat
   - nano
+  - terminator
 
 gdm3editpackages:
   - libglib2.0-dev-bin
