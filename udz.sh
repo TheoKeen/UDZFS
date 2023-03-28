@@ -84,7 +84,6 @@ scriptrundate=$(date --utc +%Y%m%d_%H%M%SZ)
 
 #---End Variables---
 
-
 set -e
 trap 'catch $? $LINENO' EXIT
 catch() {
@@ -95,7 +94,6 @@ catch() {
     UmountAll
   fi
 }
-
 
 function getconfig(){
 
@@ -249,7 +247,7 @@ mkdir ${mountdir}/etc/zfs
 cp /etc/zfs/zpool.cache ${mountdir}/etc/zfs
 cp /etc/zfs/zroot.key ${mountdir}/etc/zfs
 cp ${configfile} ${mountdir}/root
-cp  ${vaultpassfile} ${mountdir}/root
+if [ -f ${vaultpassfile} ]; then cp ${vaultpassfile} ${mountdir}/root
 
 mkdir ${mountdir}/boot/efi
 mkdir ${mountdir}/var/lib/snapd
