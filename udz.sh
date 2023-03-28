@@ -107,11 +107,14 @@ apt-get install -y curl
 
 if [ !  -f ${configfile} ] && [ ! -z ${DNSDOMAIN} ] ;  then
   echo "Attempting auto discovery of config file"
-  curl -fs  --output ${configfile} --connect-timeout 2  $(dig TXT deploy.udz.${DNSDOMAIN} +short | tr -d '"')
+  discoverurl=$(dig TXT deploy.udz.${DNSDOMAIN} +short | tr -d '"')
+  if [ ! -z ${discoverurl} ]; then
+    curl -fs  --output ${configfile} --connect-timeout 2  $(dig TXT deploy.udz.${DNSDOMAIN} +short | tr -d '"')
+  fi
 fi
 if [ !  -f ${configfile} ]; then
-  echo "Downloading config from github"
-  
+  echo "Downloading example config from github. You probably don't want the example config!!"
+  curl -fs  --output ${configfile} --connect-timeout 2  https://raw.githubusercontent.com/TheoKeen/UDZFS/main/playbooks/config.yml.example
 fi
 if [ !  -f ${configfile} ]; then echo "Failed to obtain config file abort!"; exit 1; fi
 
