@@ -27,4 +27,11 @@
   include_tasks: tailscale.yml
 
 - name: Install Brave browser
-  include_tasks: tailscale.yml
+  include_tasks: brave.yml
+
+- name: Apply User Settings
+  include_tasks: user-settings.yml
+  loop: "{{ Users }}"
+
+# Need a post chroot task to fix brave on first boot.
+  #sudo apt-get --reinstall install brave-browser

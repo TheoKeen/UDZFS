@@ -1,0 +1,27 @@
+---
+
+- name: workspaces span displays
+  become_user: "{{ item.username }}"
+  dconf:
+    key: "/org/gnome/mutter/workspaces-only-on-primary"
+    value: "false"
+
+- name: app-switcher on the current workspace only
+  become_user: "{{ item.username }}"
+  dconf:
+    key: "/org/gnome/shell/app-switcher/current-workspace-only"
+    value: "true"
+
+- name: show battery percentage
+  become_user: "{{ item.username }}"
+  dconf:
+    key: "/org/gnome/desktop/interface/show-battery-percentage"
+    value: "true"
+
+- name: show battery percentage
+  become_user: "{{ item.username }}"
+  dconf:
+    key: "/org/gnome/shell/favorite-apps"
+    value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']"
+
+
