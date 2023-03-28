@@ -111,6 +111,7 @@ if [ !  -f ${configfile} ] && [ ! -z ${DNSDOMAIN} ] ;  then
 fi
 if [ !  -f ${configfile} ]; then
   echo "Downloading config from github"
+  
 fi
 if [ !  -f ${configfile} ]; then echo "Failed to obtain config file abort!"; exit 1; fi
 
