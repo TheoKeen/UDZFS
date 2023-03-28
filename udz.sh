@@ -247,7 +247,7 @@ mkdir ${mountdir}/etc/zfs
 cp /etc/zfs/zpool.cache ${mountdir}/etc/zfs
 cp /etc/zfs/zroot.key ${mountdir}/etc/zfs
 cp ${configfile} ${mountdir}/root
-if [ -f ${vaultpassfile} ]; then cp ${vaultpassfile} ${mountdir}/root fi
+if [ -f ${vaultpassfile} ]; then cp ${vaultpassfile} ${mountdir}/root; fi
 
 mkdir ${mountdir}/boot/efi
 mkdir ${mountdir}/var/lib/snapd
