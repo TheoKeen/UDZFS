@@ -22,6 +22,6 @@
 - name: Install Tailscale
   become: true
   ansible.builtin.apt:
-    name: tailscale
+    name: "{{ tailscale_package }}"
     cache_valid_time: 3600
     state: present
