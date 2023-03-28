@@ -11,7 +11,7 @@
   include_tasks: users.yml
 
 - name: Apply System Settings
-  include_tasks: themes.yml
+  include_tasks: system-settings.yml
 
 - name: Apply User Settings
   include_tasks: user-settings.yml
