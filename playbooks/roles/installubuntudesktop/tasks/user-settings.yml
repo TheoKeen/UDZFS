@@ -43,6 +43,23 @@
     key: "/org/gnome/mutter/workspaces-only-on-primary"
     value: "false"
 
+
+# Terminator config
+
+- name: Create .ssh directories for users
+  file:
+    path: "/home/{{ item.username }}/.config/terminator"
+    state: directory
+    mode: 0744
+
+- name: Apply terminator config - {{ item.username }}
+  ansible.builtin.template:
+    src: templates/ASUser.j2
+    dest: "/home/{{ item.username }}/.config/terminator/config"
+    owner: "{{ item.username }}"
+    mode: 0664
+  when: item.avatar is defined
+
 # Workspace settings
 
 - name: app-switcher on the current workspace only - {{ item.username }}
