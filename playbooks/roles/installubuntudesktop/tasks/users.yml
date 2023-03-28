@@ -1,4 +1,6 @@
 ---
+#https://docs.ansible.com/ansible/latest/collections/ansible/builtin/subelements_lookup.html
+#https://groups.google.com/g/ansible-project/c/8XJkHQgttLA
 
 - name: Add the users from config file
   ansible.builtin.user:

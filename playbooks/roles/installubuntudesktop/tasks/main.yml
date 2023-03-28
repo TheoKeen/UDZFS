@@ -1,7 +1,6 @@
 ---
 # tasks file for InstallUbuntuDesktop
-# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/subelements_lookup.html
-#https://groups.google.com/g/ansible-project/c/8XJkHQgttLA
+
 
 - name: Install software using package (This can take a wile..)
   ansible.builtin.package:
@@ -17,8 +16,9 @@
 - name: Install Sanoid
   include_tasks: sanoid.yml
 
-- name: Install snaps
-  include_tasks: snaps.yml
+#Installing snaps in chroot doesn't work...
+#- name: Install snaps
+#  include_tasks: snaps.yml
 
 - name: Install flatpak
   include_tasks: flatpak.yml
