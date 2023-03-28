@@ -1,6 +1,6 @@
 ---
-#https://docs.ansible.com/ansible/latest/collections/ansible/builtin/subelements_lookup.html
-#https://groups.google.com/g/ansible-project/c/8XJkHQgttLA
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/subelements_lookup.html
+# https://groups.google.com/g/ansible-project/c/8XJkHQgttLA
 
 - name: Add the users from config file
   ansible.builtin.user:
@@ -8,7 +8,7 @@
     password: "{{ item.password }}"
     shell: /bin/bash
     groups: "{{ item.groups | default('') |  join(', ') }}"
-    append: yes
+    append: true
   loop: "{{ Users }}"
 
 - name: Create .ssh directories for users

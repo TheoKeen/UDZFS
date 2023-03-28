@@ -20,8 +20,8 @@
 - name: Install Sanoid
   include_tasks: sanoid.yml
 
-#Installing snaps in chroot doesn't work...
-#- name: Install snaps
+# Installing snaps in chroot doesn't work...
+# - name: Install snaps
 #  include_tasks: snaps.yml
 
 - name: Install flatpak
@@ -34,4 +34,4 @@
   include_tasks: brave.yml
 
 # Need a post chroot task to fix brave on first boot.
-  #sudo apt-get --reinstall install brave-browser
+# sudo apt-get --reinstall install brave-browser

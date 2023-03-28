@@ -11,12 +11,12 @@ gdm3editpackages:
   - libglib2.0-dev-bin
 
 sanoidpackages:
-  - debhelper 
-  - libcapture-tiny-perl 
-  - libconfig-inifiles-perl 
-  - pv 
-  - lzop 
-  - mbuffer 
+  - debhelper
+  - libcapture-tiny-perl
+  - libconfig-inifiles-perl
+  - pv
+  - lzop
+  - mbuffer
   - build-essential
 
 dconfpackages:
@@ -27,6 +27,7 @@ holdpackages:
   - grub-pc
   - grub-pc-bin
   - os-prober
+  - sssd
 
 
 flathubpackages:
@@ -37,7 +38,6 @@ flathubpackages:
 
 snappackages:
   - firefox
-
 
 tailscale_apt_keyring_path: /usr/share/keyrings/tailscale-archive-keyring.gpg
 tailscale_apt_deb: deb [signed-by={{ tailscale_apt_keyring_path }}] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release | lower }} main

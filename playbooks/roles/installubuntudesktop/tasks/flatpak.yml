@@ -4,7 +4,7 @@
   ansible.builtin.package:
     name: flatpak
     state: present
-  
+
 - name: Add the flathub flatpak repo
   community.general.flatpak_remote:
     name: flathub

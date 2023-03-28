@@ -1,7 +1,6 @@
 ---
 
-#Create avatars
-
+# Create avatars
 - name: Download avatar - {{ item.username }}
   ansible.builtin.get_url:
     url: "{{ item.avatar }}"
@@ -18,8 +17,7 @@
     mode: '0444'
   when: item.avatar is defined
 
-#Set wallpaper
-
+# Set wallpaper
 - name: Download Wallpapers - {{ item.username }}
   ansible.builtin.get_url:
     url: "{{ item.wallpaper }}"
@@ -43,25 +41,23 @@
     key: "/org/gnome/mutter/workspaces-only-on-primary"
     value: "false"
 
-
 # Terminator config
-
-- name: Create .ssh directories for users
+- name: Create terminator config directory for - {{ item.username }}
   file:
     path: "/home/{{ item.username }}/.config/terminator"
     state: directory
-    mode: 0744
+    owner: "{{ item.username }}"
+    mode: 0755
 
 - name: Apply terminator config - {{ item.username }}
   ansible.builtin.template:
-    src: templates/ASUser.j2
+    src: templates/terminator.j2
     dest: "/home/{{ item.username }}/.config/terminator/config"
     owner: "{{ item.username }}"
     mode: 0664
   when: item.avatar is defined
 
 # Workspace settings
-
 - name: app-switcher on the current workspace only - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
@@ -79,7 +75,6 @@
   dconf:
     key: "/org/gnome/shell/favorite-apps"
     value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']"
-
 
 - name: numlock on - {{ item.username }}
   dconf:
