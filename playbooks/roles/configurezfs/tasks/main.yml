@@ -68,5 +68,5 @@
 - name: Create Fallback Portable boot option. (just in case)
   ansible.builtin.copy:
     src: /boot/efi/EFI/ZBM/VMLINUZ.EFI
-    dest: /boot/efi/EFI/ZBOOT/BOOTX64.EFI
+    dest: /boot/efi/EFI/BOOT/BOOTX64.EFI
     mode: 0755
