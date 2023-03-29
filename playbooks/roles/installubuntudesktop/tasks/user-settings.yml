@@ -34,7 +34,8 @@
 - name: Set GNOME Wallpaper scale - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf: key="/org/gnome/desktop/background/picture-options" value="'scaled'"
-  loop: "{{ Users | selectattr('wallpaper', 'defined') }}"
+  when: item.wallpaper is defined
+
 - name: workspaces span displays
   become_user: "{{ item.username }}"
   dconf:

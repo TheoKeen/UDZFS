@@ -333,7 +333,8 @@ sudo chroot ${mountdir} /bin/bash  <<CEOF
 export DEBIAN_FRONTEND=noninteractive
 apt-get install -y python3-pip git
 pip install --upgrade pip
-pip install ansible
+#pip install ansible #Version 7.4.0 was not working with dconf module.
+pip install 'ansible==7.3.0'
 
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 dpkg-reconfigure --frontend=noninteractive locales
