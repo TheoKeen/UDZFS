@@ -162,10 +162,10 @@ echo "Creating disk partitions (CreatePartitions)"
 sgdisk -Z ${TARGETDISK}
 sgdisk -n ${efipartno}:1m:+512m -t 0:ef00 ${TARGETDISK}       #EFI
 sgdisk -n ${swappartno}:0:+16G -t 0:8200 ${TARGETDISK}        #Linux SWAP
-if [ ! -z ${SIZEZFS} ]; then
+if [  -z ${SIZEZFS} ]; then
 sgdisk -N ${zfspartno} -t 0:bf00 ${TARGETDISK}        #ZFS
 else
-sgdisk -n ${zfspartno}:0+${SIZEZFS} -t 0:bf00 ${TARGETDISK}
+sgdisk -n ${zfspartno}:0:+${SIZEZFS} -t 0:bf00 ${TARGETDISK}
 fi
 
 
