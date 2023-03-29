@@ -23,12 +23,13 @@ print_usage() {
   printf "Usage script:\n -d (Set Targetdisk for installation)\n -f (Force. Proceeds without confirmation. Must be used with -d)\n -h (Set hostname for target installation)\n -p (ANSIBLE-VAULT password)\n"
 }
 
-while getopts 'fd:h:p:v' flag; do
+while getopts 'fd:h:p:s:v' flag; do
   case "${flag}" in
     d) TARGETDISK="${OPTARG}" ;;
     f) confirmflag=false ;;
     h) hostname="${OPTARG}" ;;
     p) VAULTPASS="${OPTARG}" ;;
+    s) SIZEZFS="${OPTARG}" ;;
     v) verbose=false ;;
     *) print_usage
        exit 1 ;;
@@ -161,8 +162,11 @@ echo "Creating disk partitions (CreatePartitions)"
 sgdisk -Z ${TARGETDISK}
 sgdisk -n ${efipartno}:1m:+512m -t 0:ef00 ${TARGETDISK}       #EFI
 sgdisk -n ${swappartno}:0:+16G -t 0:8200 ${TARGETDISK}        #Linux SWAP
+if [ ! -z ${SIZEZFS} ]; then
 sgdisk -N ${zfspartno} -t 0:bf00 ${TARGETDISK}        #ZFS
-
+else
+sgdisk -n ${zfspartno}:0+${SIZEZFS} -t 0:bf00 ${TARGETDISK}
+fi
 
 
 SEOF
