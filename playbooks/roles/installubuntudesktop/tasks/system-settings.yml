@@ -21,3 +21,9 @@
 - name: Change GDM3 background
   ansible.builtin.script:
     cmd: ubuntu-gdm-set-background --image /usr/share/backgrounds/UDZFS
+
+- name: Enable Networkmanager for most devices.
+  file:
+    path: "/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
+    state: touch
+    mode: 0644
