@@ -58,3 +58,15 @@
     dest: /boot/efi/EFI/ZBM/VMLINUZ-BACKUP.EFI
     mode: 0755
   notify: Install ZFSBootMenu
+
+- name: Create Fallback Portable boot directory.
+  file:
+    path: /boot/efi/EFI/BOOT
+    state: directory
+    mode: 0755
+
+- name: Create Fallback Portable boot option. (just in case)
+  ansible.builtin.copy:
+    src: /boot/efi/EFI/ZBM/VMLINUZ.EFI
+    dest: /boot/efi/BOOT/BOOTX64.EFI
+    mode: 0755
