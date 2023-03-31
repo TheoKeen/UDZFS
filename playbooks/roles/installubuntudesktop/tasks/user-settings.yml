@@ -87,7 +87,7 @@
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/desktop/interface/gtk-theme"
-    value: "Yaru-dark"
+    value: "'Yaru-dark'"
   
 - name: Hide trash - {{ item.username }}
   become_user: "{{ item.username }}"
