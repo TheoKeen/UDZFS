@@ -1,6 +1,11 @@
 ---
 # tasks file for InstallUbuntuDesktop
 
+- name: Include extra apt packages from config
+  set_fact:
+    desktoppackages: "{{ desktoppackages + Config.aptpackages }}"
+  when: Config.aptpackages is defined
+
 
 - name: Install software using package (This can take a wile..)
   ansible.builtin.package:

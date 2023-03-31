@@ -9,6 +9,9 @@ Config:
   gdm3wallpaper: "file:///usr/share/backgrounds/DSC2943_by_kcpru.jpg"
   flathubpackages:
     - com.spotify.Client
+  aptpackages:
+    - nano
+    - minicom
 Services:
   ssh:
     name: ssh

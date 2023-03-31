@@ -4,8 +4,10 @@ desktoppackages:
   - ubuntu-desktop-minimal
   - git
   - socat
-  - nano
+  - dnsutils
   - terminator
+  - net-tools
+  - telnet
 
 gdm3editpackages:
   - libglib2.0-dev-bin
