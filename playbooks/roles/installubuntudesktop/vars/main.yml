@@ -34,7 +34,6 @@ holdpackages:
 
 flathubpackages:
   - org.libreoffice.LibreOffice
-  - org.videolan.VLC
   - org.mozilla.firefox
   - org.chromium.Chromium
 
