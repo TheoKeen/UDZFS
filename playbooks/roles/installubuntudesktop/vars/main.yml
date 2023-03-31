@@ -33,7 +33,6 @@ holdpackages:
 
 
 flathubpackages:
-  - org.libreoffice.LibreOffice
   - org.mozilla.firefox
   - org.chromium.Chromium
 
