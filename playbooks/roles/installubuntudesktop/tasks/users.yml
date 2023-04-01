@@ -15,6 +15,7 @@
   file:
     path: "/home/{{ item.username }}/.ssh"
     state: directory
+    owner: "{{ item.username }}"
     mode: 0700
   loop: "{{ Users }}"
 
