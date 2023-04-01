@@ -17,8 +17,6 @@
     flathubpackages: "{{ flathubpackages + Config.flathubpackages }}"
   when: Config.flathubpackages is defined
 
-- debug: var=flathubpackages
-
 - name: Install flathub packages
   flatpak:
     name: "{{ flathubpackages }}"

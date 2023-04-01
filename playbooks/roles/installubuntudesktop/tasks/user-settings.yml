@@ -86,7 +86,7 @@
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/shell/favorite-apps"
-    value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.chromium.Chromium.desktop', 'terminator.desktop']"
+    value: "['org.gnome.Nautilus.desktop', 'brave-browser.desktop', 'org.mozilla.firefox.desktop', 'org.chromium.Chromium.desktop', 'terminator.desktop']"
 
 - name: numlock on - {{ item.username }}
   become_user: "{{ item.username }}"
@@ -99,13 +99,13 @@
   dconf:
     key: "/org/gnome/shell/extensions/ding/show-home"
     value: "false"
-  
+
 - name: Hide trash - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/shell/extensions/dash-to-dock/show-trash"
     value: "false"
-  
+
 - name: Hide mounts - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
@@ -118,12 +118,12 @@
     key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
     value: "false"
 
-- name: Set Yaru-dark theme fix - {{ item.username }}
+- name: Set Yaru-dark theme - {{ item.username }}
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/desktop/interface/gtk-theme"
     value: "'Yaru-dark'"
-    
+
 - name: Disable ding extension - {{ item.username }}
   become_user: "{{ item.username }}"
   ansible.builtin.command: gnome-extensions disable ding@rastersoft.com
