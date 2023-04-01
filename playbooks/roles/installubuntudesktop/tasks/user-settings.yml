@@ -83,29 +83,29 @@
     key: "/org/gnome/desktop/peripherals/keyboard/numlock-state"
     value: "true"
 
-- name: Set Yaru-dark theme - {{ item.username }}
-  become_user: "{{ item.username }}"
-  dconf:
-    key: "/org/gnome/desktop/interface/gtk-theme"
-    value: "'Yaru-dark'"
+#- name: Set Yaru-dark theme - {{ item.username }}
+#  become_user: "{{ item.username }}"
+#  dconf:
+#    key: "/org/gnome/desktop/interface/gtk-theme"
+#    value: "'Yaru-dark'"
   
-- name: Hide trash - {{ item.username }}
-  become_user: "{{ item.username }}"
-  dconf:
-    key: "/org/gnome/shell/extensions/dash-to-dock/show-trash"
-    value: "false"
+#- name: Hide trash - {{ item.username }}
+#  become_user: "{{ item.username }}"
+#  dconf:
+#    key: "/org/gnome/shell/extensions/dash-to-dock/show-trash"
+#    value: "false"
   
-- name: Hide mounts - {{ item.username }}
-  become_user: "{{ item.username }}"
-  dconf:
-    key: "/org/gnome/shell/extensions/dash-to-dock/show-mounts"
-    value: "false"
+#- name: Hide mounts - {{ item.username }}
+#  become_user: "{{ item.username }}"
+#  dconf:
+#    key: "/org/gnome/shell/extensions/dash-to-dock/show-mounts"
+#    value: "false"
 
-- name: Auto hide dock - {{ item.username }}
-  become_user: "{{ item.username }}"
-  dconf:
-    key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
-    value: "false"
+#- name: Auto hide dock - {{ item.username }}
+#  become_user: "{{ item.username }}"
+#  dconf:
+#    key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
+#    value: "false"
     
 #- name: Disable ding extension - {{ item.username }}
 #  become_user: "{{ item.username }}"
