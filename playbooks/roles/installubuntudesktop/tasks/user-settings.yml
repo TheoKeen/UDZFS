@@ -75,7 +75,7 @@
   become_user: "{{ item.username }}"
   dconf:
     key: "/org/gnome/shell/favorite-apps"
-    value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']"
+    value: "['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.chromium.Chromium.desktop', 'terminator.desktop']"
 
 - name: numlock on - {{ item.username }}
   become_user: "{{ item.username }}"
@@ -107,7 +107,7 @@
     key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
     value: "false"
     
-- name: Disable ding extension - {{ item.username }}
-  become_user: "{{ item.username }}"
-  ansible.builtin.command: gnome-extensions disable ding@rastersoft.com
+#- name: Disable ding extension - {{ item.username }}
+#  become_user: "{{ item.username }}"
+#  ansible.builtin.command: gnome-extensions disable ding@rastersoft.com
   
