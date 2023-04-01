@@ -231,6 +231,7 @@ echo "${ZFSPASS}" | zfs load-key ${poolname}
 
 zfs mount ${poolname}/ROOT/${ID}
 zfs mount ${poolname}/DATA/home
+zfs mount ${poolname}/DATA/opt
 
 #Update device symlinks
 udevadm trigger
