@@ -37,7 +37,7 @@ while getopts 'fd:h:p:s:v' flag; do
 done
 if ! ${confirmflag} && [  -z ${TARGETDISK} ]; then echo "Cowardly refusing to guess TARGETDISK without confirmation."; exit 1; fi
 #Get available DISKS 1) Get all real block devices. 2) Filter out the Disk with a partition mounted on /cdrom
-AVAILABLEDISKS=$(lsblk -I 8,259,252 -d -no NAME | grep --invert-match --file <(findmnt -D /cdrom -n -o SOURCE | xargs -r lsblk -no pkname | grep .  || echo "NULL") | awk '{print "/dev/"$1}' )
+AVAILABLEDISKS=$(lsblk -I 8,259,252,253 -d -no NAME | grep --invert-match --file <(findmnt -D /cdrom -n -o SOURCE | xargs -r lsblk -no pkname | grep .  || echo "NULL") | awk '{print "/dev/"$1}' )
 if [ ! -z ${TARGETDISK} ]; then
   if  [ -z $(echo "${AVAILABLEDISKS}" | grep ${TARGETDISK} ) ]; then
     echo "Disk ${TARGETDISK} not found";echo "Please select one of the following disks:";echo "${AVAILABLEDISKS}"
