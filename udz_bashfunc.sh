@@ -254,7 +254,7 @@ apt-get install -y python3-pip git
 pip install --upgrade pip
 #pip install ansible #Version 7.4.0 was not working with dconf module.
 #new 24.04
-pip install 'ansible==9.6.0'
+pip install 'ansible==8.7.0'
 
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 dpkg-reconfigure --frontend=noninteractive locales
