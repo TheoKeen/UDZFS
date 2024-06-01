@@ -87,7 +87,7 @@ ubuntuversion=noble
 
 #---End Variables---
 
-source <(curl https://raw.githubusercontent.com/TheoKeen/UDZFS/udz_bashfunc.sh)
+source <(wget -qO- https://raw.githubusercontent.com/TheoKeen/UDZFS/main/udz_bashfunc.sh)
 
 
 set -e

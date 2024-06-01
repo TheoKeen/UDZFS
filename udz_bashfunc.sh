@@ -246,6 +246,7 @@ function InstallAnsible()
 sudo chroot ${mountdir} /bin/bash  <<CEOF
 
 export DEBIAN_FRONTEND=noninteractive
+rm /usr/lib/python3*/EXTERNALLY-MANAGED
 apt-get install -y python3-pip git
 pip install --upgrade pip
 #pip install ansible #Version 7.4.0 was not working with dconf module.
