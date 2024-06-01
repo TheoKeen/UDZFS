@@ -327,6 +327,7 @@ EOF
 #Enter the chroot
 sudo chroot ${mountdir} /bin/bash  <<CEOF
 apt-get update
+echo ${hostname} > /etc/hostname
 CEOF
 }
 
